@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="103">
- <tileset firstgid="1" source="room_builder.tsx"/>
- <tileset firstgid="392" source="interiors.tsx"/>
- <tileset firstgid="1816" source="spritesheet.tsx"/>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="106">
+ <tileset firstgid="1" source="../tilesets/room_builder.tsx"/>
+ <tileset firstgid="392" source="../tilesets/interiors.tsx"/>
+ <tileset firstgid="1816" source="../tilesets/spritesheet.tsx"/>
  <layer id="1" name="Piso" width="40" height="23">
   <data encoding="csv">
 199,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,2147483847,
@@ -154,6 +154,12 @@
   <object id="76" x="1056" y="639.333" width="95.3333" height="32.3333"/>
   <object id="79" x="961.333" y="638.333" width="58" height="55.3333"/>
   <object id="80" x="961.333" y="542.833" width="58" height="54.3334"/>
+  <object id="103" x="94" y="734.333" width="1122" height="1.33333"/>
+ </objectgroup>
+ <objectgroup id="7" name="player_spawn">
+  <object id="104" type="player" x="352" y="701.667">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="spawners">
   <object id="84" type="prensa" x="116" y="722">
