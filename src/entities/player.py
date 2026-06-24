@@ -58,7 +58,7 @@ def create_player(x: float = 640, y: float = 360) -> Entity:
 
     # Animación (sin auto-transiciones; las maneja la FSM)
     animation = AnimationComponent(
-        base_path="assets/gfx/player",
+        base_path="assets/gfx/player_test",
         frame_duration=0.25,
         default_state="idle",
         directions=["down", "down_right", "right", "up_right", "up"],
