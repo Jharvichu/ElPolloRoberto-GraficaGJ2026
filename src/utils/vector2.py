@@ -1,3 +1,5 @@
+import math
+
 class Vector2:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -17,3 +19,15 @@ class Vector2:
 
     def __repr__(self):
         return f"Vector2({self.x}, {self.y})"
+
+    def magnitude(self):
+        return math.sqrt(self.x ** 2 + self.y ** 2)
+
+    def normalize(self):
+        mag = self.magnitude()
+        if mag == 0:
+            return Vector2(0, 0)
+        return Vector2(self.x / mag, self.y / mag)
+
+    def copy(self):
+        return Vector2(self.x, self.y)
