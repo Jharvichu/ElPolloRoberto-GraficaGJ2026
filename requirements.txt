@@ -1,1 +1,4 @@
-pygame-ce
+pygame-ce>=2.5.2
+pytmx>=3.32.0
+pytest>=7.4.0
+pytest-cov>=4.1.0
