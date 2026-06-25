@@ -12,7 +12,8 @@ class InputAction(Enum):
     RIGHT = auto()
     ATTACK = auto()
     PARRY = auto()
-    DEBUG = auto()
+    TOGGLE_COLLIDERS = auto()
+    CYCLE_CAMERA = auto()
 
 
 class InputComponent(Component):
@@ -30,7 +31,8 @@ class InputComponent(Component):
             InputAction.RIGHT: False,
             InputAction.ATTACK: False,
             InputAction.PARRY: False,
-            InputAction.DEBUG: False,
+            InputAction.TOGGLE_COLLIDERS: False,
+            InputAction.CYCLE_CAMERA: False,
         }
 
         self.previous_keys_pressed = self.keys_pressed.copy()
@@ -51,7 +53,8 @@ class InputComponent(Component):
             InputAction.RIGHT: keys[pygame.K_d] or keys[pygame.K_RIGHT],
             InputAction.ATTACK: keys[pygame.K_SPACE],
             InputAction.PARRY: keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT],
-            InputAction.DEBUG: keys[pygame.K_k],
+            InputAction.TOGGLE_COLLIDERS: keys[pygame.K_k],
+            InputAction.CYCLE_CAMERA: keys[pygame.K_c],
         }
 
         self.input_direction = Vector2(0, 0)
@@ -92,9 +95,6 @@ class InputComponent(Component):
         """Detecta rising edge: tecla presionada en este frame pero no en el anterior"""
         return self.keys_pressed[InputAction.PARRY] and not self.previous_keys_pressed[InputAction.PARRY]
 
-    def is_debug_pressed(self):
-        return self.is_action_pressed(InputAction.DEBUG)
-
     def get_facing_direction(self):
         if self.input_direction.magnitude() > 0:
             return self.input_direction
@@ -103,8 +103,8 @@ class InputComponent(Component):
     def get_direction(self):
         return self.input_direction
 
-    def handle_key_down(self, event):
-        pass
+    def is_toggle_colliders_just_pressed(self) -> bool:
+        return self.keys_pressed[InputAction.TOGGLE_COLLIDERS] and not self.previous_keys_pressed[InputAction.TOGGLE_COLLIDERS]
 
-    def handle_key_up(self, event):
-        pass
+    def is_cycle_camera_just_pressed(self) -> bool:
+        return self.keys_pressed[InputAction.CYCLE_CAMERA] and not self.previous_keys_pressed[InputAction.CYCLE_CAMERA]

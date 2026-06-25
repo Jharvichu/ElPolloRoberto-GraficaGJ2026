@@ -5,16 +5,22 @@ from src.utils.constants import DEBUG_ENABLED, DEBUG_COLOR_SOLID, DEBUG_COLOR_TR
 
 class ColliderComponent(Component):
     """Gestiona colisiones y hitbox de una entidad"""
-    def __init__(self, width, height, offset_x=0, offset_y=0, is_trigger=False, debug=None):
+    DEBUG_ENABLED = DEBUG_ENABLED
+    DEBUG_COLOR_SOLID = DEBUG_COLOR_SOLID
+    DEBUG_COLOR_TRIGGER = DEBUG_COLOR_TRIGGER
+    DEBUG_THICKNESS = DEBUG_THICKNESS
+
+    def __init__(self, width, height, offset_x=None, offset_y=None, is_trigger=False, debug=None):
         super().__init__()
         self.width = width
         self.height = height
-        self.offset_x = offset_x
-        self.offset_y = offset_y
+        # Por defecto, centrar el collider (offset = -width/2, -height/2)
+        self.offset_x = offset_x if offset_x is not None else -width / 2
+        self.offset_y = offset_y if offset_y is not None else -height / 2
         self.is_trigger = is_trigger
-        self.debug = debug  # None = usar global, True/False = individual
+        self.debug = debug
         self.rect = pygame.Rect(0, 0, width, height)
-    
+
     def get_rect(self):
         """Retorna rect actualizado"""
         self.rect.x = self.entity.position.x + self.offset_x
@@ -75,20 +81,19 @@ class ColliderComponent(Component):
             return self.debug
         return ColliderComponent.DEBUG_ENABLED
     
-    def render_debug(self, surface):
+    def render_debug(self, surface, camera_offset=(0, 0)):
         """Dibuja contorno del collider (debug visual)"""
         if not self.is_debug_enabled():
             return
-        
+
         rect = self.get_rect()
-        color = self.DEBUG_COLOR_TRIGGER if self.is_trigger else self.DEBUG_COLOR_SOLID
-        
-        # Dibuja rect (contorno)
-        pygame.draw.rect(surface, color, rect, self.DEBUG_THICKNESS)
-        
-        # Dibuja punto del centro
-        center = self.get_center()
-        pygame.draw.circle(surface, color, center, 3)
+        offset_x, offset_y = camera_offset
+        rect = rect.move(offset_x, offset_y)
+
+        color = ColliderComponent.DEBUG_COLOR_TRIGGER if self.is_trigger else ColliderComponent.DEBUG_COLOR_SOLID
+
+        pygame.draw.rect(surface, color, rect, ColliderComponent.DEBUG_THICKNESS)
+        pygame.draw.circle(surface, color, (int(rect.centerx), int(rect.centery)), 3)
     
     @staticmethod
     def enable_debug_global():

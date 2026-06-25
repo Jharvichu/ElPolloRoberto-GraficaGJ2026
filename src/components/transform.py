@@ -5,12 +5,13 @@ from src.utils.vector2 import Vector2
 
 class TransformComponent(Component):
     """Gestiona posición, rotación y escala de una entidad"""
-    
+
     def __init__(self, x=0, y=0, rotation=0, scale=1.0):
         super().__init__()
         self.position = Vector2(x, y)
         self.rotation = rotation
-        self.scale = scale
+        self.scale_x = scale
+        self.scale_y = scale
         self.previous_position = Vector2(x, y)
     
     def set_position(self, x, y):
@@ -28,8 +29,19 @@ class TransformComponent(Component):
         self.rotation = angle % 360
     
     def set_scale(self, scale):
-        self.scale = max(0.1, scale)
-    
+        """Escala en ambos ejes"""
+        scale = max(0.1, scale)
+        self.scale_x = scale
+        self.scale_y = scale
+
+    def set_scale_x(self, scale_x):
+        """Escala solo en eje X"""
+        self.scale_x = max(0.1, scale_x)
+
+    def set_scale_y(self, scale_y):
+        """Escala solo en eje Y"""
+        self.scale_y = max(0.1, scale_y)
+
     def get_forward(self):
         """Retorna Vector2 hacia la dirección que apunta"""
         rad = math.radians(self.rotation)

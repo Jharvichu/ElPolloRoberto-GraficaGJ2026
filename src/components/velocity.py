@@ -10,7 +10,7 @@ class VelocityComponent(Component):
         self.velocity = Vector2(0, 0)
         self.acceleration = Vector2(0, 0)
         self.max_speed = max_speed
-        self.friction = friction  # 0-1, qué tan rápido se detiene
+        self.friction = friction
     
     def set_velocity(self, vx, vy):
         self.velocity = Vector2(vx, vy)
