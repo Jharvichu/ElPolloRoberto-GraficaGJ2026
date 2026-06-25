@@ -6,7 +6,7 @@ from src.components.sprite import SpriteComponent
 from src.components.collider import ColliderComponent
 from src.components.animation import AnimationComponent
 from src.components.animation_state_machine import AnimationStateMachineComponent
-from src.components.health import HealthComponent
+#from src.components.health import HealthComponent
 from src.config.game_config import GAME_CONFIG
 from src.config.player_config import PLAYER_CONFIG
 
