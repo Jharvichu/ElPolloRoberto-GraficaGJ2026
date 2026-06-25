@@ -4,15 +4,7 @@ from typing import Tuple, Optional
 
 class Camera:
     def __init__(self, width: int, height: int, map_width: int, map_height: int):
-        """
-        Cámara que sigue a un objetivo manteniéndolo centrado.
-
-        Args:
-            width: Ancho de la cámara en píxeles (tamaño visible)
-            height: Alto de la cámara en píxeles (tamaño visible)
-            map_width: Ancho total del mapa en píxeles
-            map_height: Alto total del mapa en píxeles
-        """
+        """Cámara que sigue a un objetivo manteniéndolo centrado"""
         self.width = width
         self.height = height
         self.map_width = map_width
