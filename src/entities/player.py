@@ -6,7 +6,9 @@ from src.components.sprite import SpriteComponent
 from src.components.collider import ColliderComponent
 from src.components.animation import AnimationComponent
 from src.components.animation_state_machine import AnimationStateMachineComponent
-from src.utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.components.health import HealthComponent
+from src.config.game_config import GAME_CONFIG
+from src.config.player_config import PLAYER_CONFIG
 
 
 def _build_player_animation_fsm(player: Entity) -> AnimationStateMachineComponent:
@@ -23,7 +25,6 @@ def _build_player_animation_fsm(player: Entity) -> AnimationStateMachineComponen
     # Definir estados
     fsm.add_state("idle", duration=float('inf'), face_velocity=True)
     fsm.add_state("run", duration=float('inf'), face_velocity=True)
-    fsm.add_state("attack", duration=0.4, face_velocity=False)
 
     # Transiciones: idle <-> run por velocidad
     fsm.add_transition("idle", "run",
@@ -31,61 +32,67 @@ def _build_player_animation_fsm(player: Entity) -> AnimationStateMachineComponen
     fsm.add_transition("run", "idle",
         lambda entity: entity.get_component("VelocityComponent").velocity.magnitude() <= 0.1)
 
-    # Transiciones: a attack por input
-    fsm.add_transition("idle", "attack",
-        lambda entity: entity.get_component("InputComponent").is_attacking_just_pressed())
-    fsm.add_transition("run", "attack",
-        lambda entity: entity.get_component("InputComponent").is_attacking_just_pressed())
-
-    # Transición: attack -> idle por duración
-    fsm.add_transition("attack", "idle",
-        lambda entity: fsm.state_elapsed() > 0.4)
-
     return fsm
 
 
-def create_player(x: float = 640, y: float = 360) -> Entity:
+def create_player(x: float = None, y: float = None) -> Entity:
+    """
+    Factory para crear el jugador completamente configurado.
+
+    Args:
+        x: Posición X inicial (por defecto, centro pantalla)
+        y: Posición Y inicial (por defecto, centro pantalla)
+
+    Returns:
+        Entity con todos los componentes del jugador
+    """
+    if x is None:
+        x = GAME_CONFIG.SCREEN_WIDTH / 2
+    if y is None:
+        y = GAME_CONFIG.SCREEN_HEIGHT / 2
+
     player = Entity(x, y)
 
-    transform = TransformComponent()
+    # Componente de Transformación
+    transform = TransformComponent(scale=0.15)
     player.add_component("TransformComponent", transform)
 
-    velocity = VelocityComponent(max_speed=250)
+    # Componente de Movimiento
+    velocity = VelocityComponent(max_speed=PLAYER_CONFIG.MAX_SPEED)
     player.add_component("VelocityComponent", velocity)
 
+    # Componente de Entrada
     input_component = InputComponent()
     player.add_component("InputComponent", input_component)
 
-    # Animación (sin auto-transiciones; las maneja la FSM)
+    # Componente de Animación
+    # La FSM controla las transiciones de estado, no el componente automáticamente
     animation = AnimationComponent(
-        base_path="assets/gfx/player_test",
-        frame_duration=0.25,
+        base_path=PLAYER_CONFIG.ANIMATION_BASE_PATH,
+        frame_duration=PLAYER_CONFIG.FRAME_DURATION,
         default_state="idle",
-        directions=["down", "down_right", "right", "up_right", "up"],
-        flip_map={
-            "down": ("down", False, False),
-            "down_right": ("right", False, False),
-            "right": ("right", False, False),
-            "up_right": ("right", False, False),
-            "up": ("up", False, False),
-            "up_left": ("right", True, False),
-            "left": ("right", True, False),
-            "down_left": ("right", True, False),
-        },
+        directions=PLAYER_CONFIG.DIRECTIONS,
+        flip_map=PLAYER_CONFIG.FLIP_MAP,
     )
     animation.load_animation_set("idle")
     animation.load_animation_set("run")
     animation.load_animation_set("attack")
-    animation.enabled = False  # La FSM lo actualiza, no el Entity.update() genérico
+    animation.enabled = False  # La FSM lo actualiza, no el Entity.update()
     player.add_component("AnimationComponent", animation)
 
-    sprite = SpriteComponent(width=32, height=32)
+    # Componente de Sprite
+    sprite = SpriteComponent(PLAYER_CONFIG.SPRITE_WIDTH, PLAYER_CONFIG.SPRITE_HEIGHT)
     player.add_component("SpriteComponent", sprite)
 
-    collider = ColliderComponent(width=32, height=32, offset_x=0, offset_y=0, is_trigger=False, debug=True)
+    # Componente de Colisión
+    collider = ColliderComponent(
+        width = PLAYER_CONFIG.SPRITE_WIDTH - 10,
+        height = PLAYER_CONFIG.SPRITE_HEIGHT,
+        offset_y = 16
+    )
     player.add_component("ColliderComponent", collider)
 
-    # Configurar FSM de animación
+    # Máquina de Estados de Animación
     animation_fsm = _build_player_animation_fsm(player)
     player.add_component("AnimationStateMachineComponent", animation_fsm)
 
@@ -93,13 +100,28 @@ def create_player(x: float = 640, y: float = 360) -> Entity:
 
 
 def clamp_player_position(entity: Entity):
+    """Mantiene al jugador dentro de los límites de pantalla"""
     collider = entity.get_component("ColliderComponent")
 
     if collider:
-        min_x = 0
-        max_x = SCREEN_WIDTH - collider.width
-        min_y = 0
-        max_y = SCREEN_HEIGHT - collider.height
+        min_x = -collider.offset_x
+        max_x = GAME_CONFIG.SCREEN_WIDTH - collider.width - collider.offset_x
+        min_y = -collider.offset_y
+        max_y = GAME_CONFIG.SCREEN_HEIGHT - collider.height - collider.offset_y
 
         entity.position.x = max(min_x, min(max_x, entity.position.x))
         entity.position.y = max(min_y, min(max_y, entity.position.y))
+
+
+def create_static_collider(x: float, y: float, width: float, height: float) -> Entity:
+    """Factory para crear un collider estático (obstáculo del mapa)"""
+    collider_entity = Entity(x, y)
+
+    transform = TransformComponent()
+    collider_entity.add_component("TransformComponent", transform)
+
+    # Offset 0,0 porque los colliders del mapa TMX usan esquina superior-izquierda
+    collider = ColliderComponent(width=width, height=height, offset_x=0, offset_y=0)
+    collider_entity.add_component("ColliderComponent", collider)
+
+    return collider_entity
