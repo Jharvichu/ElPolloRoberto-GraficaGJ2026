@@ -162,60 +162,60 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="spawners">
-  <object id="84" type="prensa" x="116" y="722">
+  <object id="84" type="barbaran" x="116" y="722">
    <point/>
   </object>
-  <object id="85" type="prensa" x="158.333" y="614.667">
+  <object id="85" type="galarreta" x="158.333" y="614.667">
    <point/>
   </object>
-  <object id="86" type="trol" x="130" y="446.667">
+  <object id="86" type="barbaran" x="130" y="446.667">
    <point/>
   </object>
-  <object id="87" type="topo" x="319.333" y="165.333">
+  <object id="87" type="galarreta" x="319.333" y="165.333">
    <point/>
   </object>
-  <object id="88" type="prensa" x="560.667" y="306.667">
+  <object id="88" type="barbaran" x="560.667" y="306.667">
    <point/>
   </object>
-  <object id="89" type="prensa" x="753.333" y="305.333">
+  <object id="89" type="galarreta" x="753.333" y="305.333">
    <point/>
   </object>
-  <object id="90" type="topo" x="590" y="185.333">
+  <object id="90" type="barbaran" x="590" y="185.333">
    <point/>
   </object>
-  <object id="91" type="topo" x="784.667" y="108.667">
+  <object id="91" type="galarreta" x="784.667" y="108.667">
    <point/>
   </object>
-  <object id="92" type="trol" x="895.333" y="218.667">
+  <object id="92" type="barbaran" x="895.333" y="218.667">
    <point/>
   </object>
-  <object id="93" type="trol" x="1032.67" y="318">
+  <object id="93" type="galarreta" x="1032.67" y="318">
    <point/>
   </object>
-  <object id="94" type="topo" x="1096.67" y="172.667">
+  <object id="94" type="barbaran" x="1096.67" y="172.667">
    <point/>
   </object>
-  <object id="95" type="trol" x="1172" y="575.333">
+  <object id="95" type="galarreta" x="1172" y="575.333">
    <point/>
   </object>
-  <object id="96" type="trol" x="603.333" y="540.667">
+  <object id="96" type="barbaran" x="603.333" y="540.667">
    <point/>
   </object>
-  <object id="97" type="topo" x="819.333" y="540">
+  <object id="97" type="galarreta" x="819.333" y="540">
    <point/>
   </object>
-  <object id="98" type="topo" x="991.333" y="725.333">
+  <object id="98" type="barbaran" x="991.333" y="725.333">
+   <point/>
+  </object>
+  <object id="102" type="galarreta" x="400" y="300">
+   <point/>
+  </object>
+  <object id="105" type="barbaran" x="850" y="400">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="6" name="boss_spawn">
-  <object id="99" name="keiko" type="jefe" x="686" y="210">
-   <point/>
-  </object>
-  <object id="100" name="barbaran" type="jefe" x="687" y="390">
-   <point/>
-  </object>
-  <object id="101" name="galarreta" type="jefe" x="688" y="292">
+  <object id="100" name="keiko" type="jefe" x="687" y="390">
    <point/>
   </object>
  </objectgroup>
