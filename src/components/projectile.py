@@ -13,9 +13,9 @@ class ProjectileComponent(Component):
 
     def __init__(self, entity, config, direction: Vector2, owner):
         super().__init__()
-        self.entity = entity    # Proyectil
+        self.entity = entity
         self.config = config
-        self.owner = owner      # Entidad que disparó el proyectil
+        self.owner = owner
         self.state = ProjectileState.OUTGOING
         self.elapsed = 0.0
         self.bounces = 0

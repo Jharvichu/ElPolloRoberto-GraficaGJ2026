@@ -77,9 +77,6 @@ class AIComponent(Component):
 
     def _apply_obstacle_avoidance(self, desired_direction: Vector2) -> Vector2:
         """Ajusta dirección si hay un obstáculo cercano (reducción suave de velocidad)."""
-        # Este método se mantiene simple: la resolución de colisiones en la escena
-        # se encarga de evitar que los enemigos atraviesen paredes.
-        # La evitación principal se hace con el "sliding" en resolve_enemy_collisions.
         return desired_direction
 
     def _handle_attack(self, player, dt):
