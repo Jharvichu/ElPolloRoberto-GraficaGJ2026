@@ -41,6 +41,27 @@ class MapScene(Scene):
         event_bus = EventBus()
         event_bus.subscribe("entity_died", self._on_entity_died)
 
+        # Configuración efecto de daño
+        self.damage_alpha = 0
+        self.damage_surface = pygame.Surface((1280, 720), pygame.SRCALPHA)
+        pygame.draw.rect(self.damage_surface, (255, 0, 0), self.damage_surface.get_rect(), width=40)
+        
+        player_health = self.player.get_component("HealthComponent")
+        self.last_player_hp = player_health.current_hp if player_health else 0
+
+    # Musica al entrar al mapa
+    def on_enter(self):
+        try:
+            pygame.mixer.music.load("assets/bgm/game_song.mp3")
+            pygame.mixer.music.play(-1)
+            pygame.mixer.music.set_volume(0.5)
+        except pygame.error:
+            pass
+
+    # Parar música
+    def on_exit(self):
+        pygame.mixer.music.stop()
+
     def handle_input(self, event):
         pass
 
@@ -101,6 +122,19 @@ class MapScene(Scene):
 
         # Verificar si Keiko debe spawnear (todos los enemigos regulares eliminados)
         self._check_spawn_boss()
+
+        # Efecto de daño
+        player_health = self.player.get_component("HealthComponent")
+        if player_health:
+            current_hp = player_health.current_hp
+            if current_hp < self.last_player_hp:
+                self.damage_alpha = 180  # borde rojo
+            self.last_player_hp = current_hp
+
+        if self.damage_alpha > 0:
+            self.damage_alpha -= 500 * dt 
+            if self.damage_alpha < 0:
+                self.damage_alpha = 0
     
     def render(self, surface):
         """Renderiza la escena"""
@@ -126,6 +160,13 @@ class MapScene(Scene):
             health_text = f"Vida: {player_health.current_hp}/{player_health.max_hp}"
             text_surface = self.font_ui.render(health_text, True, (50, 255, 50))
             surface.blit(text_surface, (20, 20))
+
+        # --- AGREGADO: DIBUJAR BORDES ROJOS SI HAY DAÑO ---
+        if self.damage_alpha > 0:
+            screen_w, screen_h = surface.get_size()
+            damage_scaled = pygame.transform.scale(self.damage_surface, (screen_w, screen_h))
+            damage_scaled.set_alpha(int(self.damage_alpha))
+            surface.blit(damage_scaled, (0, 0))
 
     def setup_player(self):
         """Crea el jugador y lo posiciona en el spawn del mapa"""
