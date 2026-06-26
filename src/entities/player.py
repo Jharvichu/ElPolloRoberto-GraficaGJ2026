@@ -6,20 +6,13 @@ from src.components.sprite import SpriteComponent
 from src.components.collider import ColliderComponent
 from src.components.animation import AnimationComponent
 from src.components.animation_state_machine import AnimationStateMachineComponent
-#from src.components.health import HealthComponent
+from src.components.health import HealthComponent
 from src.config.game_config import GAME_CONFIG
 from src.config.player_config import PLAYER_CONFIG
 
 
 def _build_player_animation_fsm(player: Entity) -> AnimationStateMachineComponent:
-    """
-    Configura la máquina de estados de animación del jugador.
-
-    Transiciones:
-    - idle <-> run: según magnitud de velocidad
-    - idle/run -> attack: al hacer click de ataque
-    - attack -> idle: después de duración fija
-    """
+    
     fsm = AnimationStateMachineComponent(player, initial_state="idle")
 
     # Definir estados
@@ -36,16 +29,7 @@ def _build_player_animation_fsm(player: Entity) -> AnimationStateMachineComponen
 
 
 def create_player(x: float = None, y: float = None) -> Entity:
-    """
-    Factory para crear el jugador completamente configurado.
 
-    Args:
-        x: Posición X inicial (por defecto, centro pantalla)
-        y: Posición Y inicial (por defecto, centro pantalla)
-
-    Returns:
-        Entity con todos los componentes del jugador
-    """
     if x is None:
         x = GAME_CONFIG.SCREEN_WIDTH / 2
     if y is None:
@@ -54,7 +38,7 @@ def create_player(x: float = None, y: float = None) -> Entity:
     player = Entity(x, y)
 
     # Componente de Transformación
-    transform = TransformComponent(scale=0.15)
+    transform = TransformComponent(scale=0.175)
     player.add_component("TransformComponent", transform)
 
     # Componente de Movimiento
@@ -84,13 +68,29 @@ def create_player(x: float = None, y: float = None) -> Entity:
     sprite = SpriteComponent(PLAYER_CONFIG.SPRITE_WIDTH, PLAYER_CONFIG.SPRITE_HEIGHT)
     player.add_component("SpriteComponent", sprite)
 
-    # Componente de Colisión
+    # Componente de Colisión Física (choca con paredes)
     collider = ColliderComponent(
         width = PLAYER_CONFIG.SPRITE_WIDTH - 10,
         height = PLAYER_CONFIG.SPRITE_HEIGHT,
-        offset_y = 16
+        offset_y = 16,
+        is_trigger = False
     )
     player.add_component("ColliderComponent", collider)
+
+    # Componente de Trigger (recibe daño de balas)
+    trigger = ColliderComponent(
+        width = PLAYER_CONFIG.SPRITE_WIDTH,
+        height = PLAYER_CONFIG.SPRITE_HEIGHT,
+        is_trigger = True
+    )
+    player.add_component("TriggerComponent", trigger)
+
+    # Componente de Vida
+    health = HealthComponent(
+        max_hp=PLAYER_CONFIG.MAX_HP,
+        invincibility_duration=PLAYER_CONFIG.INVINCIBILITY_DURATION
+    )
+    player.add_component("HealthComponent", health)
 
     # Máquina de Estados de Animación
     animation_fsm = _build_player_animation_fsm(player)
