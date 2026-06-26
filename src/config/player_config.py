@@ -6,9 +6,9 @@ class PlayerConfig:
     """Estadísticas y configuración del jugador."""
 
     # Movimiento
-    MAX_SPEED: float = 250.0  # píxeles/segundo
-    ACCELERATION: float = 500.0  # píxeles/segundo²
-    FRICTION: float = 400.0  # píxeles/segundo² (desaceleración)
+    MAX_SPEED: float = 250.0
+    ACCELERATION: float = 500.0
+    FRICTION: float = 400.0
 
     # Físicas
     SPRITE_WIDTH: int = 32
@@ -16,23 +16,26 @@ class PlayerConfig:
 
     # Animación
     ANIMATION_BASE_PATH: str = "assets/gfx/pollo_con_sombrero"
-    FRAME_DURATION: float = 0.25  # segundos por frame
+    FRAME_DURATION: float = 0.1
     DIRECTIONS: list = None
     FLIP_MAP: dict = None
 
     # Vida y Daño
     MAX_HP: int = 100
-    INVINCIBILITY_DURATION: float = 1.0  # segundos de invencibilidad después de daño
-    KNOCKBACK_FORCE: float = 200.0  # píxeles/segundo al recibir daño
+    INVINCIBILITY_DURATION: float = 1.0
+    KNOCKBACK_FORCE: float = 200.0
 
     # Ataque
     ATTACK_DAMAGE: int = 10
-    ATTACK_COOLDOWN: float = 0.5  # segundos
-    ATTACK_DURATION: float = 0.4  # duración de animación de ataque
+    ATTACK_COOLDOWN: float = 0.5
+    ATTACK_DURATION: float = 0.4
 
     # Parry
-    PARRY_WINDOW: float = 0.3  # segundos durante los que se puede parry
-    PARRY_COOLDOWN: float = 0.8  # segundos
+    PARRY_WINDOW: float = 0.3
+    PARRY_COOLDOWN: float = 0.8
+
+    # Escala de animaciones
+    ANIMATION_SCALE: dict = None
 
     def __post_init__(self):
         # Establecer valores por defecto para listas/dicts
@@ -49,6 +52,12 @@ class PlayerConfig:
                 "up_left": ("right", True, False),
                 "left": ("right", True, False),
                 "down_left": ("right", True, False),
+            }
+
+        if self.ANIMATION_SCALE is None:
+            self.ANIMATION_SCALE = {
+                "con_sombrero": 0.15,
+                "sin_sombrero": 0.10,
             }
 
 
